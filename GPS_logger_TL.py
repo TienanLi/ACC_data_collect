@@ -1,14 +1,15 @@
 import serial
-from UBXManager import UBXManager
-import ubx_tool
+
 
 
 def GPS_logger():
-    ser = serial.Serial('COM3', 115200, timeout=None)
-    manager = UBXManager(ser, debug=True)
-    manager.run()
+    ser = serial.Serial('COM4')
+    if not ser.is_open:
+        ser.open()
 
-
+    ser.write('B5 62 06 08 06 00 64 00 01 00 01 00 7A 12'.encode())
+    response = ser.read()
+    print(response)
 
 
 if __name__ == "__main__":

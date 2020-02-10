@@ -7,7 +7,7 @@ from contextlib import contextmanager
 import serial
 
 SERVICE_01 = 0xC4 # 196
-IFACE = '/dev/ttyUSB0'
+IFACE = 'COM5'
 BAUDRATE = serial.Serial.BAUDRATES[14]
 
 
