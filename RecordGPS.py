@@ -231,68 +231,70 @@ class UbxPacketizer:
         else:
             return None
 
-#Start the second portion of code where data logging begins:
-#This was altered:
-ser = serial.Serial(port='COM4')#,
-    #baudrate=115200,\
-#     parity=serial.PARITY_NONE,
-#     stopbits=serial.STOPBITS_ONE,
-#     bytesize=serial.EIGHTBITS, timeout=0)
 
-##print("connected to: " + ser.portstr)
-ser.write('0xB5 0x62 0x06 0x08 0x06 0x00 0x64 0x00 0x01 0x00 0x01 0x00 0x7A 0x12'.encode())
+if __name__ == "__main__":
+    #Start the second portion of code where data logging begins:
+    #This was altered:
+    ser = serial.Serial(port='/dev/ttyACM0')#,
+        #baudrate=115200,\
+    #     parity=serial.PARITY_NONE,
+    #     stopbits=serial.STOPBITS_ONE,
+    #     bytesize=serial.EIGHTBITS, timeout=0)
 
-# ser.write('B5 62 06 01 08 00 01 07 00 00 00 01 00 00 18 DF'.encode())
+    ##print("connected to: " + ser.portstr)
+    # ser.write('0xB5 0x62 0x06 0x08 0x06 0x00 0x64 0x00 0x01 0x00 0x01 0x00 0x7A 0x12'.encode())
 
-count=1
+    # ser.write('B5 62 06 01 08 00 01 07 00 00 00 01 00 00 18 DF'.encode())
 
-packet_count = 0
+    count=1
 
-save_counter = 0
-save_frequency = 10 #How often you want to save the messages
+    packet_count = 0
 
-pack = []
-my_packet = []
-output_data = np.array([[0,0, 0, 0, 0, 0]])
-packetizer = UbxPacketizer()
+    save_counter = 0
+    save_frequency = 10 #How often you want to save the messages
 
-#Starts reading data here:
-startTime = time.time()
+    pack = []
+    my_packet = []
+    output_data = np.array([[0,0, 0, 0, 0, 0]])
+    packetizer = UbxPacketizer()
+
+    #Starts reading data here:
+    startTime = time.time()
 
 
-while True:
-    
-    #Specify the name of the file you'd like to save here:
-    fileName = 'GPS_Data.csv'
+    while True:
 
-    try:
-        l = ser.read(1)
-        packet = packetizer.add_byte(l[0])
-        #print(l)
-        
-        if packet is not None:
-            decoded_packet = decode_packet(packet)
-            t = time.time() - startTime
-            if type(decoded_packet) == SolutionPacket:
-                #print(decoded_packet)
-                my_packet = decoded_packet
-                newrow = np.array([[t,
-                           my_packet.time_of_week, 
-                           my_packet.llh_position[0], 
-                           my_packet.llh_position[1], 
-                           my_packet.llh_position[2], 
-                           my_packet.ground_speed]])
-                output_data = np.concatenate((output_data, newrow))
-                save_counter += 1
-                packet_count += 1
-                #Will save the new data recorded and print a statement saying so every 10 packets:
-                if(save_counter%save_frequency == 0):
-                    print("Saved Packets: "+str(packet_count))
-                    #Set the name of the file to be saved to here:
-                    np.savetxt(fileName, output_data, delimiter=',')
-                
+        #Specify the name of the file you'd like to save here:
+        fileName = 'GPS_Data.csv'
 
-    except KeyboardInterrupt:
-        ser.close()
+        try:
+            l = ser.read(1)
+            packet = packetizer.add_byte(l[0])
+            #print(l)
+
+            if packet is not None:
+                decoded_packet = decode_packet(packet)
+                t = time.time() - startTime
+                if type(decoded_packet) == SolutionPacket:
+                    #print(decoded_packet)
+                    my_packet = decoded_packet
+                    newrow = np.array([[t,
+                               my_packet.time_of_week,
+                               my_packet.llh_position[0],
+                               my_packet.llh_position[1],
+                               my_packet.llh_position[2],
+                               my_packet.ground_speed]])
+                    output_data = np.concatenate((output_data, newrow))
+                    save_counter += 1
+                    packet_count += 1
+                    #Will save the new data recorded and print a statement saying so every 10 packets:
+                    if(save_counter%save_frequency == 0):
+                        print("Saved Packets: "+str(packet_count))
+                        #Set the name of the file to be saved to here:
+                        np.savetxt(fileName, output_data, delimiter=',')
+
+
+        except KeyboardInterrupt:
+            ser.close()
 
 
