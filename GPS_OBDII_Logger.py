@@ -23,7 +23,7 @@ if __name__ == "__main__":
                 t = time.time() - startTime
                 if type(decoded_packet) == SolutionPacket:
                     my_packet = decoded_packet
-                    OBD_speed = connection.query(obd.commands.SPEED).value.to('mps').magnitude
+                    OBD_speed = connection.query(obd.commands.SPEED).value.magnitude
                     OBD_fuel_rate = connection.query(obd.commands.FUEL_RATE).value.magnitude
                     OBD_max_air_flow = connection.query(obd.commands.MAF).value.magnitude
 
