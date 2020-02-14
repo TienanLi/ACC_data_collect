@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
 import time
-import datetime
-
-import os
-import shutil
-
 import warnings
 import numpy as np
-#from pubsub import pub
 from astropy.time import Time
 import struct
 import GnssConstants
@@ -16,13 +10,8 @@ import bitstring
 from sensor import (ExtendedObservation,
                                   EphemerisData,
                                   RawxPacket,
-                                  SolutionPacket,
-                                  SimpleSolutionPacket)
-
-#Changed this:
+                                  SolutionPacket)
 import serial
-#from serial import Serial
-import csv
 
 def decode_sfrbx(packet):
     payload = packet[6:-2]
