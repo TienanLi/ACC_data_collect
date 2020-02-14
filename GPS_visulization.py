@@ -10,15 +10,12 @@ def read_data_from_csv(file_name,Lat_column,Lon_column,speed_column):
     line_num=0
     while True:
         line_num+=1
-        #for each line
         line = fo.readline()
         if not line:
             break
-        #split the whole line by cKomma
         tmp = line.split(',')
         if len(tmp) < max([Lat_column,Lon_column,speed_column]):
             break
-
         location.append([float(tmp[Lat_column]),float(tmp[Lon_column]),float(tmp[speed_column])])
     fo.close()
     return location
@@ -36,7 +33,6 @@ def map_visulization(location):
     colorscale.caption = 'Speed (m/s)'
     m.add_child(colorscale)
     m.save('test.html')
-
 
 if __name__=='__main__':
     location=read_data_from_csv('/GPS_Data_historical.csv',2,3,5)
