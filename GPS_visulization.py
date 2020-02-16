@@ -35,6 +35,6 @@ def map_visulization(location):
     m.save('test.html')
 
 if __name__=='__main__':
-    location=read_data_from_csv('/GPS_Data_historical.csv',2,3,5)
+    location=read_data_from_csv('/output15132642.csv',2,3,5)
     map_visulization(location)
 
