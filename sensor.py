@@ -34,11 +34,11 @@ SolutionPacket = NamedTuple(
     'SolutionPacket', [
         ('time_of_week', float),
         ('llh_position', np.ndarray),
-        ('ned_velocity', np.ndarray),
+        # ('ned_velocity', np.ndarray),
         ('ground_speed', float),
-        ('time_accuracy', float),
-        ('whole_gps_time', int),
-        ('frac_gps_time', int)
+        # ('time_accuracy', float),
+        # ('whole_gps_time', int),
+        # ('frac_gps_time', int)
     ]
 )
 

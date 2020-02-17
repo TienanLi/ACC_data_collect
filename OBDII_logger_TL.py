@@ -1,19 +1,24 @@
-#use python 3 because of the obd package
-# -*- coding: utf-8 -*-
+import time
+import csv
 import obd
-import serial
 
 
-def main():
-
+if __name__ == "__main__":
     connection=obd.OBD('/dev/rfcomm0')
-    obd.logger.setLevel(obd.logging.DEBUG)  # enables all debug information
-    # r = connection.query(obd.commands.SPEED)
-    # print(r.value.magnitude)
-    r = connection.query(obd.commands.FUEL_RATE,force=True)
-    print(r)
-    # r = connection.query(obd.commands.RPM)
-    # print(r)
+    start_time=time.strftime("%d%H%M%S", time.localtime())
+    print(start_time)
+    outputfile = open('output' + start_time + '.csv', 'w')
+    csvwriter = csv.writer(outputfile)
+    print("Writing OBD-II csv file...\n")
+    while True:
+        try:
+            t = time.time()
+            OBD_speed = connection.query(obd.commands.SPEED).value.magnitude
+            OBD_max_air_flow = connection.query(obd.commands.MAF).value.magnitude
+            csvwriter.writerow([t,#time from record start
+                                OBD_max_air_flow,#gram/sec
+                                OBD_speed#m/s
+                                ])
 
-if __name__ == '__main__':
-    main()
+        except KeyboardInterrupt:
+            outputfile.close()

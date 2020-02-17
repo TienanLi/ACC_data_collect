@@ -95,45 +95,45 @@ def decode_solution(packet):
 #     print('The payload is: ')
 #     print(payload)
     i_tow = (struct.unpack("<L", payload[0:4])[0] / 1000)
-    year = struct.unpack("<H", payload[4:6])[0]
-    month = struct.unpack("B", bytes([payload[6]]))[0]
-    day = struct.unpack("B", bytes([payload[7]]))[0]
+    # year = struct.unpack("<H", payload[4:6])[0]
+    # month = struct.unpack("B", bytes([payload[6]]))[0]
+    # day = struct.unpack("B", bytes([payload[7]]))[0]
+    #
+    # hour = struct.unpack("B", bytes([payload[8]]))[0]
+    # minuite = struct.unpack("B", bytes([payload[9]]))[0]
+    # sec = struct.unpack("B", bytes([payload[10]]))[0]
+#     valid = struct.unpack("B", bytes([payload[11]]))[0]
 
-    hour = struct.unpack("B", bytes([payload[8]]))[0]
-    minuite = struct.unpack("B", bytes([payload[9]]))[0]
-    sec = struct.unpack("B", bytes([payload[10]]))[0]
-    valid = struct.unpack("B", bytes([payload[11]]))[0]
+    # tAcc = struct.unpack("<I", payload[12:16])[0]
+    # nanosecond = struct.unpack("<i", payload[16:20])[0]
 
-    tAcc = struct.unpack("<I", payload[12:16])[0]
-    nanosecond = struct.unpack("<i", payload[16:20])[0]
+    # utc_time = Time("{}-{}-{} {}:{}:{}.0".format(year, month, day,
+    #                                              hour, minuite, sec))
+    # whole_gps_time = int(utc_time.gps)
+    # frac_gps_time = int(nanosecond)
+    # fixtype = struct.unpack("B", bytes([payload[20]]))[0]
+    # fixflags = struct.unpack("B", bytes([payload[21]]))[0]
 
-    utc_time = Time("{}-{}-{} {}:{}:{}.0".format(year, month, day,
-                                                 hour, minuite, sec))
-    whole_gps_time = int(utc_time.gps)
-    frac_gps_time = int(nanosecond)
-    fixtype = struct.unpack("B", bytes([payload[20]]))[0]
-    fixflags = struct.unpack("B", bytes([payload[21]]))[0]
-
-    numSV = struct.unpack("B", bytes([payload[23]]))[0]
+    # numSV = struct.unpack("B", bytes([payload[23]]))[0]
 
     lon = struct.unpack("<l", payload[24:28])[0] * 1e-7
     lat = struct.unpack("<l", payload[28:32])[0] * 1e-7
     height_mean_sea_level = struct.unpack("<l", payload[36:40])[0] / 1000.0
 
-    velN = struct.unpack("<l", payload[48:52])[0]
-    velE = struct.unpack("<l", payload[52:56])[0]
-    velD = struct.unpack("<l", payload[56:60])[0]
+    # velN = struct.unpack("<l", payload[48:52])[0]
+    # velE = struct.unpack("<l", payload[52:56])[0]
+    # velD = struct.unpack("<l", payload[56:60])[0]
 
     ground_speed = struct.unpack("<l", payload[60:64])[0] / 1000.0
 
     return SolutionPacket(
         time_of_week=i_tow,
         llh_position=np.array([lat, lon, height_mean_sea_level]),
-        ned_velocity=np.array([velN, velE, velD]),
+        # ned_velocity=np.array([velN, velE, velD]),
         ground_speed=ground_speed,
-        time_accuracy=tAcc,
-        whole_gps_time=whole_gps_time,
-        frac_gps_time=frac_gps_time
+        # time_accuracy=tAcc,
+        # whole_gps_time=whole_gps_time,
+        # frac_gps_time=frac_gps_time
     )
 
 
@@ -148,8 +148,8 @@ def create_checksum(packet):
     return CK_A, CK_B
 
 _PACKET_DECODERS = {
-    '0x02 0x15': decode_rawx,
-    '0x02 0x13': decode_sfrbx,
+    # '0x02 0x15': decode_rawx,
+    # '0x02 0x13': decode_sfrbx,
     '0x01 0x07': decode_solution
 }
 
