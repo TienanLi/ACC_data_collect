@@ -1,5 +1,4 @@
 from typing import NamedTuple, Tuple
-import numpy as np
 import bitstring
 
 ExtendedObservation = NamedTuple(
@@ -33,7 +32,7 @@ RawxPacket = NamedTuple(
 SolutionPacket = NamedTuple(
     'SolutionPacket', [
         ('time_of_week', float),
-        ('llh_position', np.ndarray),
+        ('llh_position', list),
         # ('ned_velocity', np.ndarray),
         ('ground_speed', float),
         # ('time_accuracy', float),
@@ -45,7 +44,7 @@ SolutionPacket = NamedTuple(
 SimpleSolutionPacket = NamedTuple(
     'SimpleSolutionPacket', [
         ('time_of_week', float),
-        ('llh_position', np.ndarray),
+        ('llh_position', list),
         ('ground_speed', float)
     ]
 )

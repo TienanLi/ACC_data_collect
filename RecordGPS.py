@@ -1,9 +1,6 @@
 #!/usr/bin/python
 
-import time
 import warnings
-import numpy as np
-from astropy.time import Time
 import struct
 import GnssConstants
 import bitstring
@@ -128,7 +125,7 @@ def decode_solution(packet):
 
     return SolutionPacket(
         time_of_week=i_tow,
-        llh_position=np.array([lat, lon, height_mean_sea_level]),
+        llh_position=[lat, lon, height_mean_sea_level],
         # ned_velocity=np.array([velN, velE, velD]),
         ground_speed=ground_speed,
         # time_accuracy=tAcc,
@@ -219,71 +216,5 @@ class UbxPacketizer:
             return self._current_packet
         else:
             return None
-
-
-if __name__ == "__main__":
-    #Start the second portion of code where data logging begins:
-    #This was altered:
-    ser = serial.Serial(port='/dev/ttyACM0')#,
-        #baudrate=115200,\
-    #     parity=serial.PARITY_NONE,
-    #     stopbits=serial.STOPBITS_ONE,
-    #     bytesize=serial.EIGHTBITS, timeout=0)
-
-    ##print("connected to: " + ser.portstr)
-    # ser.write('0xB5 0x62 0x06 0x08 0x06 0x00 0x64 0x00 0x01 0x00 0x01 0x00 0x7A 0x12'.encode())
-
-    # ser.write('B5 62 06 01 08 00 01 07 00 00 00 01 00 00 18 DF'.encode())
-
-    count=1
-
-    packet_count = 0
-
-    save_counter = 0
-    save_frequency = 10 #How often you want to save the messages
-
-    pack = []
-    my_packet = []
-    output_data = np.array([[0,0, 0, 0, 0, 0]])
-    packetizer = UbxPacketizer()
-
-    #Starts reading data here:
-    startTime = time.time()
-
-
-    while True:
-
-        #Specify the name of the file you'd like to save here:
-        fileName = 'GPS_Data.csv'
-
-        try:
-            l = ser.read(1)
-            packet = packetizer.add_byte(l[0])
-            #print(l)
-
-            if packet is not None:
-                decoded_packet = decode_packet(packet)
-                t = time.time() - startTime
-                if type(decoded_packet) == SolutionPacket:
-                    #print(decoded_packet)
-                    my_packet = decoded_packet
-                    newrow = np.array([[t,
-                               my_packet.time_of_week,
-                               my_packet.llh_position[0],
-                               my_packet.llh_position[1],
-                               my_packet.llh_position[2],
-                               my_packet.ground_speed]])
-                    output_data = np.concatenate((output_data, newrow))
-                    save_counter += 1
-                    packet_count += 1
-                    #Will save the new data recorded and print a statement saying so every 10 packets:
-                    if(save_counter%save_frequency == 0):
-                        print("Saved Packets: "+str(packet_count))
-                        #Set the name of the file to be saved to here:
-                        np.savetxt(fileName, output_data, delimiter=',')
-
-
-        except KeyboardInterrupt:
-            ser.close()
 
 
