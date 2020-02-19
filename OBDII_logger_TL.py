@@ -7,7 +7,7 @@ def main(port_name,MAF=True):
     connection=obd.OBD(port_name)
     start_time=time.strftime("%d%H%M%S", time.localtime())
     print(start_time)
-    outputfile = open('output' + start_time + '.csv', 'w')
+    outputfile = open('output' + start_time + '.csv', 'w', newline='')
     csvwriter = csv.writer(outputfile)
     print("Writing OBD-II csv file...\n")
     while True:
@@ -26,7 +26,6 @@ def main(port_name,MAF=True):
                                     ])
         except KeyboardInterrupt:
             outputfile.close()
-
 
 if __name__ == "__main__":
     main(sys.argv[1],sys.argv[2])
